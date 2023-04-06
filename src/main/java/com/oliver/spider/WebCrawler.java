@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.jsoup.nodes.Document;
+
 /****************************************************************************
  * <b>Title</b>WebCrawler.java<p/>
  * <b>Description: Starts the process for the web crawler</b> 
@@ -19,63 +21,78 @@ import java.util.Queue;
  * <b>Changes: </b>
  ****************************************************************************/
 public class WebCrawler {
-
+	
+	public static final String STARTING_URL = "https://smt-stage.qa.siliconmtn.com/";
+	
+	/**
+	 * Main method that begins process
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		WebCrawler wc = new WebCrawler();
 		wc.beginProcess();
 	}
 	
+	/**
+	 * Process method that calls different process blocks
+	 * @throws IOException
+	 */
 	public void beginProcess() throws IOException {
-		//Begin process to write Cache Page HTML
 		//writeCacheHTML();
-		//Begin web crawl from "smt-stage.qa.siliconmtn.com"
-		beginWebCrawl("https://smt-stage.qa.siliconmtn.com/", null, null);
+		beginWebCrawl(STARTING_URL, null, null);
 	}
 	
+	/**
+	 * Writes cache to .txt file
+	 */
 	public void writeCacheHTML() {
 		//GET cookies
 		//POST cookies + access credentials
 		//GET Cache Page HTML
 		//Write HTML
 	}
-
-	public void beginWebCrawl(String myURL, List<String> visitedList, Queue<String> unvisitedQueue) throws IOException {
-		
-		/*System.out.println("myURL: " + myURL);
-		System.out.println("visitedList: " + visitedList);
-		System.out.println("unvisitedQueue: " + unvisitedQueue);
-		System.out.println("~~~");
-		*/
+	
+	/**
+	 * Runs the web crawl
+	 * @param currentURL
+	 * @param visitedList
+	 * @param unvisitedQueue
+	 * @throws IOException
+	 */
+	public void beginWebCrawl(String currentURL, List<String> visitedList, Queue<String> unvisitedQueue) throws IOException {
 		
 		//Instantiate classes
-		FileManager fm = new FileManager();
-		URLManager myURLManager = new URLManager(visitedList, unvisitedQueue);
-		ParseHTML parser = new ParseHTML();
-		FilterHTML filter = new FilterHTML();
+		WebManager webManager = new WebManager();
+		FileManager fileManager = new FileManager();
+		URLManager urlManager = new URLManager(visitedList, unvisitedQueue);
+		WebParser webParser = new WebParser();
+		WebFilter webFilter = new WebFilter();
 		
-		//Add Unvisited URL
-		//myURLManager.addUnvisitedURL(myURL);
+		//Receive current Document and URLQueue
+		Document currentDoc = webManager.getPageAsDoc(currentURL);
+		Queue<String> urlQueue = urlManager.getQueue();
 		
-		//GET HTML and Write HTML
-		fm.writePageHTML(myURL);
+		//Write Page HTML to .txt file
+		fileManager.writePageHTML(currentDoc, currentURL);
 		
 		//Add Visited URL
-		myURLManager.addVisitedURL(myURL);
+		urlManager.addVisitedURL(currentURL);
 		
 		//Remove Queue Head
-		myURLManager.removeQueueHead();
+		urlManager.removeQueueHead();
 
 		//Parse HTML for URL's, filter it for local URLs and repeats
-		Queue<String> URLQueue = myURLManager.getQueue();
-		myURLManager.addUnvisitedURL(filter.filterRepeats(filter.getLocalURLs(parser.parseHTML()), URLQueue));
+		urlManager.addUnvisitedList(webFilter.filterRepeats(webFilter.getLocalURLs(webParser.parseHTML(currentDoc)), urlQueue));
 		
-		System.out.println("myURL: " + myURL);
-		System.out.println("Visited List size: " + myURLManager.getVisitedList().size() + " : " + myURLManager.getVisitedList());
-		System.out.println("URLQueue size: " + myURLManager.getQueue().size() + " : " + myURLManager.getQueue());
+		System.out.println("currentURL: " + currentURL);
+		System.out.println("Visited List size: " + urlManager.getVisitedList().size() + " : " + urlManager.getVisitedList());
+		System.out.println("URLQueue size: " + urlManager.getQueue().size() + " : " + urlManager.getQueue());
 		System.out.println("");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println("");
 		
-		if (!URLQueue.isEmpty()) beginWebCrawl(URLQueue.peek(), myURLManager.getVisitedList(), myURLManager.getQueue());
+		//If the Queue isn't empty call beginWebCrawl again
+		if (!urlQueue.isEmpty()) beginWebCrawl(urlQueue.peek(), urlManager.getVisitedList(), urlManager.getQueue());
 	}
 }

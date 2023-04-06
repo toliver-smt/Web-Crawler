@@ -18,58 +18,85 @@ import java.util.Queue;
  * @since April 4, 2023
  * <b>Changes: </b>
  ****************************************************************************/
+
 public class URLManager {
-	public Queue<String> unvisitedQueue = new LinkedList<>();
+	
+	//Declare urlQueue and visitedList
+	public Queue<String> urlQueue = new LinkedList<>();
 	public List<String> visitedList = new ArrayList<>();
 	
-	//Constructor
-	public URLManager(List<String> visitedList, Queue<String> unvisitedQueue) {
-		if (visitedList != null && unvisitedQueue != null) {
-		setQueue(unvisitedQueue);
-		addVisitedList(visitedList);
+	/**
+	 * Constructor that initializes urlQueue and visitedList
+	 * @param myVisitedList
+	 * @param myQueue
+	 */
+	public URLManager(List<String> myVisitedList, Queue<String> myQueue) {
+		if (myVisitedList != null && myQueue != null) {
+		setQueue(myQueue);
+		addVisitedList(myVisitedList);
 		}
 	}
 	
-	//VISITED QUEUE
-	//Contains URL's visited
+	//~~~~~~~~~~~~~~~~~VISITED LIST~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	/**
+	 * Adds a URL to visitedList
+	 * @param visitedURL
+	 */
 	public void addVisitedURL(String visitedURL) {
 		visitedList.add(visitedURL);
 	}
 	
+	/**
+	 * Adds a list of URL to visitedList
+	 * @param myVisitedList
+	 */
 	public void addVisitedList(List<String> myVisitedList) {
 		visitedList.addAll(myVisitedList);
 	}
-
+	
+	/**
+	 * Get visitedList
+	 * @return
+	 */
 	public List<String> getVisitedList() {
 		return visitedList;
 	}
 	
 	
-	//QUEUE
-	//Add URL to non-visited queue
-	public void addUnvisitedURL(List<String> myList) {
-		for (int i=0; i<myList.size(); i++) {
-			//Check if URL is in visited list
-			if (!visitedList.contains(myList.get(i))) {
-				unvisitedQueue.add(myList.get(i));
-			}
+	//~~~~~~~~~~~~~~~~~~~~QUEUE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	/**
+	 * Adds a list to urlQueue if not in visitedList
+	 * @param myList
+	 */
+	public void addUnvisitedList(List<String> myList) {
+		for (String element : myList) {
+			if (!visitedList.contains(element)) urlQueue.add(element);
 		}
 	}
 	
+	/**
+	 * Removes the head of urlQueue
+	 */
 	public void removeQueueHead() {
-		if (!unvisitedQueue.isEmpty()) {
-			unvisitedQueue.remove();
-		}
+		if (!urlQueue.isEmpty()) urlQueue.remove();
 	}
 	
+	/**
+	 * Get urlQueue
+	 * @return
+	 */
 	public Queue<String> getQueue() {
-		return unvisitedQueue;
+		return urlQueue;
 	}
 	
+	/**
+	 * Adds a Queue to urlQueue
+	 * @param myQueue
+	 */
 	public void setQueue(Queue<String> myQueue) {
-		unvisitedQueue.addAll(myQueue);
+		urlQueue.addAll(myQueue);
 	}
-	
-	//Check if non-visited queue is empty
 
 }

@@ -17,23 +17,32 @@ import java.util.regex.*;
  * @since April 4, 2023
  * <b>Changes: </b>
  ****************************************************************************/
-public class FilterHTML {
-	//Filter HTML for local URL's
+public class WebFilter {
+	
+	/**
+	 * Filter HTML for local URL's
+	 * @param myList
+	 * @return
+	 */
 	public List<String> getLocalURLs(List<String> myList) {
 		myList.removeIf(s -> !s.startsWith("https"));
 		return myList;
 	}
 	
-	//Filter HTML for repeats
-	public List<String> filterRepeats(List<String> myList, Queue<String> myList2) {
+	//Could be split up into two methods
+	/**
+	 * Filter HTML for repeats within itself and check its not in visitedList
+	 * @param currentList
+	 * @param totalQueue
+	 * @return
+	 */
+	public List<String> filterRepeats(List<String> currentList, Queue<String> totalQueue) {
 		List<String> newList = new ArrayList<>();
-		for (int i=0; i<myList.size(); i++) {
-			if (!newList.contains(myList.get(i)) && !myList2.contains(myList.get(i))) {
-				newList.add(myList.get(i));
+		for (int i=0; i<currentList.size(); i++) {
+			if (!newList.contains(currentList.get(i)) && !totalQueue.contains(currentList.get(i))) {
+				newList.add(currentList.get(i));
 			}
 		}
-		//System.out.println("myList");
-		//System.out.println(myList);
 		return newList;
 	}
 }

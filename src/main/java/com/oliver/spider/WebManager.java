@@ -21,7 +21,7 @@ import java.net.Socket;
  ****************************************************************************/
 public class WebManager {
 	
-	public static final String LOGIN_URL = "https://smt-stage.qa.siliconmtn.com";
+	public static final String LOGIN_URL = "https://smt-stage.qa.siliconmtn.com/";
 	public static final int PORT_NUMBER = 443;
 	public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
 	
@@ -31,6 +31,16 @@ public class WebManager {
 		WebManager wm = new WebManager();
 		//wm.getPageHTML();
 		wm.getCookies();
+	}
+	
+	/**
+	 * Create a connection to currentURL
+	 * @param currentURL
+	 * @return
+	 * @throws IOException
+	 */
+	public Document getPageAsDoc(String currentURL) throws IOException {
+		return Jsoup.connect(currentURL).get();
 	}
 	
 	//GET Cookies
@@ -48,15 +58,8 @@ public class WebManager {
 		
 	}
 	
-	//GET HTML
-	/*public String getPageHTML() throws IOException {
-		//Connect to login form url and retrieve the response
-		Connection.Response loginForm = Jsoup.connect(LOGIN_URL).method(Connection.Method.GET).execute();
-		//Document that contains the response html
-		BufferedInputStream loginDoc = loginForm.bodyStream();
-		System.out.println("loginDoc:");
-		System.out.println(loginDoc);
-		return loginDoc;
+	//receive the cache page
+	public void getPageBehindLogin() {
+		
 	}
-	*/
 }

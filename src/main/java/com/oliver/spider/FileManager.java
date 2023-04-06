@@ -22,21 +22,25 @@ import org.jsoup.*;
  ****************************************************************************/
 
 public class FileManager {
-	public static final String LOGIN_URL = "https://smt-stage.qa.siliconmtn.com";
 	
-	//write HTML to file
-	public void writePageHTML(String loginURL) throws IOException {
-		//Connect to login form url and retrieve the response
-		Connection.Response loginForm = Jsoup.connect(loginURL).method(Connection.Method.GET).execute();
-		//Document that contains the response html
-		InputStream inputStream = new ByteArrayInputStream(loginForm.parse().toString().getBytes());
+	/**
+	 * Write currentDoc to .txt file
+	 * @param currentDoc
+	 * @param currentURL
+	 * @throws IOException
+	 */
+	public void writePageHTML(Document currentDoc, String currentURL) throws IOException {
+		
+		//Create buffered input stream
+		InputStream inputStream = new ByteArrayInputStream(currentDoc.toString().getBytes());
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 		BufferedReader in = new BufferedReader(inputStreamReader);
 		
-		File outputFile = new File("src/main/java/com/oliver/spider/" + loginURL.replaceAll("https://smt-stage.qa.siliconmtn.com/", "") + ".txt");
+		//Create output stream
+		File outputFile = new File("src/main/resources/res/" + currentURL.replaceAll("https://smt-stage.qa.siliconmtn.com/", "") + ".txt");
     	FileOutputStream writer = new FileOutputStream(outputFile);
 		
-    	//while loop that prints each line read
+    	//Write to file
     	int inData;
     	while((inData = in.read()) != -1) {
     		writer.write(inData);
