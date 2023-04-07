@@ -1,12 +1,6 @@
 package com.oliver.spider;
-
 import java.io.*;
-import java.util.Map;
-
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.*;
 
 /****************************************************************************
  * <b>Title</b>FileManager.java<p/>
@@ -26,10 +20,12 @@ public class FileManager {
 	/**
 	 * Write currentDoc to .txt file
 	 * @param currentDoc
-	 * @param currentURL
 	 * @throws IOException
 	 */
-	public void writePageHTML(Document currentDoc, String currentURL) throws IOException {
+	public void writePageHTML(Document currentDoc) throws IOException {
+		
+		//Define the title of the Document
+		String title = currentDoc.title();
 		
 		//Create buffered input stream
 		InputStream inputStream = new ByteArrayInputStream(currentDoc.toString().getBytes());
@@ -37,7 +33,7 @@ public class FileManager {
 		BufferedReader in = new BufferedReader(inputStreamReader);
 		
 		//Create output stream
-		File outputFile = new File("src/main/resources/res/" + currentURL.replaceAll("https://smt-stage.qa.siliconmtn.com/", "") + ".txt");
+		File outputFile = new File("src/main/resources/res/" + title + ".txt");
     	FileOutputStream writer = new FileOutputStream(outputFile);
 		
     	//Write to file
@@ -45,5 +41,9 @@ public class FileManager {
     	while((inData = in.read()) != -1) {
     		writer.write(inData);
     	}
+    	
+    	//Close streams
+    	in.close();
+    	writer.close();
 	}
 }

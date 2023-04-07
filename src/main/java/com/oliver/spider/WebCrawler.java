@@ -1,10 +1,7 @@
 package com.oliver.spider;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 import org.jsoup.nodes.Document;
 
@@ -23,7 +20,7 @@ import org.jsoup.nodes.Document;
 public class WebCrawler {
 	
 	public static final String STARTING_URL = "https://smt-stage.qa.siliconmtn.com/";
-	
+
 	/**
 	 * Main method that begins process
 	 * @param args
@@ -39,18 +36,24 @@ public class WebCrawler {
 	 * @throws IOException
 	 */
 	public void beginProcess() throws IOException {
-		//writeCacheHTML();
-		beginWebCrawl(STARTING_URL, null, null);
+		writeCacheHTML();
+		crawl(STARTING_URL, null, null);
 	}
 	
 	/**
 	 * Writes cache to .txt file
 	 */
-	public void writeCacheHTML() {
-		//GET cookies
-		//POST cookies + access credentials
-		//GET Cache Page HTML
-		//Write HTML
+	public void writeCacheHTML() throws IOException {
+		
+		//Instantiate classes
+		WebManager webManager = new WebManager();
+		FileManager fileManager = new FileManager();
+		
+		webManager.getCookies();
+		webManager.initFormData();
+		webManager.initHeader();
+		webManager.login();
+		fileManager.writePageHTML(webManager.getPageBehindLogin());
 	}
 	
 	/**
@@ -60,7 +63,7 @@ public class WebCrawler {
 	 * @param unvisitedQueue
 	 * @throws IOException
 	 */
-	public void beginWebCrawl(String currentURL, List<String> visitedList, Queue<String> unvisitedQueue) throws IOException {
+	public void crawl(String currentURL, List<String> visitedList, Queue<String> unvisitedQueue) throws IOException {
 		
 		//Instantiate classes
 		WebManager webManager = new WebManager();
@@ -69,30 +72,34 @@ public class WebCrawler {
 		WebParser webParser = new WebParser();
 		WebFilter webFilter = new WebFilter();
 		
-		//Receive current Document and URLQueue
+		//Receive current Document and totalQueue
 		Document currentDoc = webManager.getPageAsDoc(currentURL);
-		Queue<String> urlQueue = urlManager.getQueue();
+		Queue<String> totalQueue = urlManager.getQueue();
+		List<String> currVisitedList = urlManager.getVisitedList();
 		
-		//Write Page HTML to .txt file
-		fileManager.writePageHTML(currentDoc, currentURL);
-		
-		//Add Visited URL
+		fileManager.writePageHTML(currentDoc);
 		urlManager.addVisitedURL(currentURL);
-		
-		//Remove Queue Head
 		urlManager.removeQueueHead();
-
-		//Parse HTML for URL's, filter it for local URLs and repeats
-		urlManager.addUnvisitedList(webFilter.filterRepeats(webFilter.getLocalURLs(webParser.parseHTML(currentDoc)), urlQueue));
+		
+		//Parse the HTML from Document
+		List<String> parsedHTML = webParser.parseHTML(currentDoc);
+		//GET all URL's that are local
+		List<String> unfilteredLinkList = webFilter.getLocalURLs(parsedHTML);
+		//If item in currURLsList isn't in totalQueue, add it
+		Queue<String> newTotalQueue = webFilter.filterRepeats(unfilteredLinkList, totalQueue);
+		//If item in currVisitedList is in newTotalQueue, remove it
+		Queue<String> filteredQueue = webFilter.removeRepeatsFromQueue(currVisitedList, newTotalQueue);
+		//Add filtered Queue to totalQueue;
+		urlManager.addUnvisitedList(filteredQueue);
 		
 		System.out.println("currentURL: " + currentURL);
-		System.out.println("Visited List size: " + urlManager.getVisitedList().size() + " : " + urlManager.getVisitedList());
-		System.out.println("URLQueue size: " + urlManager.getQueue().size() + " : " + urlManager.getQueue());
+		System.out.println("Visited List size: " + currVisitedList.size() + " : " + currVisitedList);
+		System.out.println("URLQueue size: " + totalQueue.size() + " : " + totalQueue);
 		System.out.println("");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println("");
 		
 		//If the Queue isn't empty call beginWebCrawl again
-		if (!urlQueue.isEmpty()) beginWebCrawl(urlQueue.peek(), urlManager.getVisitedList(), urlManager.getQueue());
+		if (!totalQueue.isEmpty()) crawl(totalQueue.peek(), currVisitedList, totalQueue);
 	}
 }

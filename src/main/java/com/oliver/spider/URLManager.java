@@ -1,10 +1,5 @@
 package com.oliver.spider;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /****************************************************************************
  * <b>Title</b>URLManager.java<p/>
@@ -67,13 +62,11 @@ public class URLManager {
 	//~~~~~~~~~~~~~~~~~~~~QUEUE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	/**
-	 * Adds a list to urlQueue if not in visitedList
+	 * Adds a list to urlQueue
 	 * @param myList
 	 */
-	public void addUnvisitedList(List<String> myList) {
-		for (String element : myList) {
-			if (!visitedList.contains(element)) urlQueue.add(element);
-		}
+	public void addUnvisitedList(Queue<String> myList) {
+		urlQueue.addAll(myList);
 	}
 	
 	/**

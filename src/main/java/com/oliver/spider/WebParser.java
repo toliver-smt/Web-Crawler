@@ -1,17 +1,14 @@
 package com.oliver.spider;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jsoup.Jsoup;
+import java.util.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /****************************************************************************
- * <b>Title</b>ParseHTML.java<p/>
- * <b>Description: Parse's HTML</b> 
+ * <b>Title</b>WebParser.java<p/>
+ * <b>Description: Parse's web page's</b> 
  * <p/>
  * <b>Copyright:</b> Copyright (c) 2023<p/>
  * <b>Company:</b> Silicon Mountain Technologies<p/>
@@ -21,6 +18,7 @@ import org.jsoup.select.Elements;
  * @since April 4, 2023
  * <b>Changes: </b>
  ****************************************************************************/
+
 public class WebParser {
 
 	/**
