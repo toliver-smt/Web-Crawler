@@ -189,13 +189,13 @@ td,th { padding: 2px; }
          </tr>
          <tr>
           <td>SB</td>
-          <td>46</td>
-          <td>197547</td>
+          <td>49</td>
+          <td>211380</td>
           <td>ALIVE</td>
-          <td>5832</td>
-          <td>225</td>
-          <td>848</td>
-          <td>9</td>
+          <td>8032</td>
+          <td>575</td>
+          <td>2122</td>
+          <td>14</td>
           <td><a href="?cPage=stats&amp;actionId=FLUSH_CACHE&amp;action=regionSummary&amp;cacheName=SB"> Summary </a> | <a href="?cPage=stats&amp;actionId=FLUSH_CACHE&amp;action=detail&amp;cacheName=SB"> Detail </a> | <a href="javascript:decision('Clicking OK will remove all the data from the region [SB]!','?cPage=stats&amp;actionId=FLUSH_CACHE&amp;action=clearRegion&amp;cacheName=SB')"> Clear </a></td>
          </tr>
         </tbody>

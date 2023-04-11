@@ -1,95 +1,96 @@
 package com.oliver.spider;
+
 import java.util.*;
 
 /****************************************************************************
- * <b>Title</b>URLManager.java<p/>
- * <b>Description: Manages URL's</b> 
+ * <b>Title</b>URLManager.java
  * <p/>
- * <b>Copyright:</b> Copyright (c) 2023<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * <b>Description: Manages URLs</b>
+ * <p/>
+ * <b>Copyright:</b> Copyright (c) 2023
+ * <p/>
+ * <b>Company:</b> Silicon Mountain Technologies
+ * <p/>
  * 
  * @author Tyler Oliver
  * @version 1.0
- * @since April 4, 2023
- * <b>Changes: </b>
+ * @since April 4, 2023 <b>Changes: </b>
  ****************************************************************************/
 
 public class URLManager {
-	
-	//Declare urlQueue and visitedList
-	public Queue<String> urlQueue = new LinkedList<>();
-	public List<String> visitedList = new ArrayList<>();
-	
+
+	// Declare urlQueue and visitedList
+	private Queue<String> urlQueue = new LinkedList<>();
+	private List<String> visitedList = new ArrayList<>();
+
 	/**
 	 * Constructor that initializes urlQueue and visitedList
-	 * @param myVisitedList
-	 * @param myQueue
+	 * 
+	 * @param currVisitedList
+	 * @param currURLQueue
 	 */
-	public URLManager(List<String> myVisitedList, Queue<String> myQueue) {
-		if (myVisitedList != null && myQueue != null) {
-		setQueue(myQueue);
-		addVisitedList(myVisitedList);
+	public URLManager(List<String> currVisitedList, Queue<String> currURLQueue) {
+		if (currVisitedList != null && currURLQueue != null) {
+			setQueue(currURLQueue);
+			addVisitedList(currVisitedList);
 		}
 	}
-	
-	//~~~~~~~~~~~~~~~~~VISITED LIST~~~~~~~~~~~~~~~~~~~~~~~~
-	
+
+	// ~~~~~~~~~~~~~~~~~VISITED LIST~~~~~~~~~~~~~~~~~~~~~~~~
+
 	/**
 	 * Adds a URL to visitedList
+	 * 
 	 * @param visitedURL
 	 */
 	public void addVisitedURL(String visitedURL) {
 		visitedList.add(visitedURL);
 	}
-	
+
 	/**
 	 * Adds a list of URL to visitedList
-	 * @param myVisitedList
+	 * 
+	 * @param currVisitedList
 	 */
-	public void addVisitedList(List<String> myVisitedList) {
-		visitedList.addAll(myVisitedList);
+	public void addVisitedList(List<String> currVisitedList) {
+		visitedList.addAll(currVisitedList);
 	}
-	
+
 	/**
 	 * Get visitedList
-	 * @return
+	 * 
+	 * @return visitedList
 	 */
 	public List<String> getVisitedList() {
 		return visitedList;
 	}
-	
-	
-	//~~~~~~~~~~~~~~~~~~~~QUEUE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
-	/**
-	 * Adds a list to urlQueue
-	 * @param myList
-	 */
-	public void addUnvisitedList(Queue<String> myList) {
-		urlQueue.addAll(myList);
-	}
-	
+
+	// ~~~~~~~~~~~~~~~~~~~~QUEUE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 	/**
 	 * Removes the head of urlQueue
 	 */
 	public void removeQueueHead() {
-		if (!urlQueue.isEmpty()) urlQueue.remove();
+		if (!urlQueue.isEmpty())
+			urlQueue.remove();
 	}
-	
+
 	/**
 	 * Get urlQueue
-	 * @return
+	 * 
+	 * @return urlQueue
 	 */
 	public Queue<String> getQueue() {
 		return urlQueue;
 	}
-	
+
 	/**
 	 * Adds a Queue to urlQueue
-	 * @param myQueue
+	 * 
+	 * @param currQueue
 	 */
-	public void setQueue(Queue<String> myQueue) {
-		urlQueue.addAll(myQueue);
+	public void setQueue(Queue<String> currQueue) {
+		urlQueue.addAll(currQueue);
 	}
 
 }
