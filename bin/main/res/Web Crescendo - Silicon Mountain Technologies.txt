@@ -127,12 +127,12 @@
          </tr>
          <tr>
           <td>SB</td>
-          <td>58</td>
-          <td>233797</td>
+          <td>60</td>
+          <td>243019</td>
           <td>ALIVE</td>
-          <td>3558</td>
+          <td>3594</td>
           <td>394</td>
-          <td>7107</td>
+          <td>7110</td>
           <td>4</td>
           <td><a href="?cPage=stats&amp;actionId=FLUSH_CACHE&amp;action=regionSummary&amp;cacheName=SB"> Summary </a> | <a href="?cPage=stats&amp;actionId=FLUSH_CACHE&amp;action=detail&amp;cacheName=SB"> Detail </a> | <a href="javascript:decision('Clicking OK will remove all the data from the region [SB]!','?cPage=stats&amp;actionId=FLUSH_CACHE&amp;action=clearRegion&amp;cacheName=SB')"> Clear </a></td>
          </tr>
