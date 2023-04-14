@@ -29,6 +29,7 @@ public class WebCrawler {
 	private String PASSWORD;
 	private String PARSE_TAG;
 	private String PARSE_ATTRIBUTE;
+	private String WRITE_TO_PATH;
 
 	/**
 	 * Main method that begins process
@@ -64,6 +65,7 @@ public class WebCrawler {
 			PASSWORD = prop.getProperty("PASSWORD");
 			PARSE_TAG = prop.getProperty("PARSE_TAG");
 			PARSE_ATTRIBUTE = prop.getProperty("PARSE_ATTRIBUTE");
+			WRITE_TO_PATH = prop.getProperty("WRITE_TO_PATH");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +80,7 @@ public class WebCrawler {
 		String formData = webManager.initFormData(EMAIL_ADDRESS, PASSWORD);
 		String cookies = webManager.getValidCookies(REQUEST_URL, HOST, formData);
 		Document thisDoc = webManager.getPageBehindLogin(CACHE_STATS, HOST, cookies);
-		fileManager.writePageHTML(thisDoc, CACHE_STATS);
+		fileManager.writePageHTML(thisDoc, WRITE_TO_PATH);
 	}
 
 	/**
@@ -101,7 +103,7 @@ public class WebCrawler {
 		List<String> totalVisitedList = urlManager.getVisitedList();
 		
 		// Write the currentDoc to a file
-		fileManager.writePageHTML(currentDoc, currentURL);
+		fileManager.writePageHTML(currentDoc, WRITE_TO_PATH);
 		// Add the currentURL to totalVisitedList
 		urlManager.addVisitedURL(currentURL);
 		// Remove Queue head, i.e. currentURL after first iteration
