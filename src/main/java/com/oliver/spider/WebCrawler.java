@@ -22,13 +22,13 @@ import org.jsoup.nodes.Document;
  ****************************************************************************/
 public class WebCrawler {
 
-	// Put into its own file so i can ignore it in .gitignore
-	private String STARTING_URL;
-	private String LOGIN_URL;
+	private String HOST;
 	private String REQUEST_URL;
 	private String CACHE_STATS;
 	private String EMAIL_ADDRESS;
 	private String PASSWORD;
+	private String PARSE_TAG;
+	private String PARSE_ATTRIBUTE;
 
 	/**
 	 * Main method that begins process
@@ -46,7 +46,7 @@ public class WebCrawler {
 	public void beginProcess() {
 		initConstants();
 		writeCacheHTML();
-		crawl(STARTING_URL, null, null);
+		crawl(HOST, null, null);
 	}
 
 	/**
@@ -57,12 +57,13 @@ public class WebCrawler {
 		try (FileInputStream propsInput = new FileInputStream(configFilePath)) {
 			Properties prop = new Properties();
 			prop.load(propsInput);
-			STARTING_URL = prop.getProperty("STARTING_URL");
-			LOGIN_URL = prop.getProperty("LOGIN_URL");
+			HOST = prop.getProperty("HOST");
 			REQUEST_URL = prop.getProperty("REQUEST_URL");
 			CACHE_STATS = prop.getProperty("CACHE_STATS");
 			EMAIL_ADDRESS = prop.getProperty("EMAIL_ADDRESS");
 			PASSWORD = prop.getProperty("PASSWORD");
+			PARSE_TAG = prop.getProperty("PARSE_TAG");
+			PARSE_ATTRIBUTE = prop.getProperty("PARSE_ATTRIBUTE");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -74,14 +75,10 @@ public class WebCrawler {
 	public void writeCacheHTML() {
 		WebManager webManager = new WebManager();
 		FileManager fileManager = new FileManager();
-		// Get cookies
-		Map<String, String> cookies = webManager.getCookies(LOGIN_URL);
-		// Initialize form data
-		Map<String, String> formData = webManager.initFormData(EMAIL_ADDRESS, PASSWORD);
-		// Login so JSESSIONID corresponds with a logged in session
-		webManager.login(REQUEST_URL, cookies, formData);
-		// Write page behind login to text document
-		fileManager.writePageHTML(webManager.getPageBehindLogin(CACHE_STATS, cookies, formData));
+		String formData = webManager.initFormData(EMAIL_ADDRESS, PASSWORD);
+		String cookies = webManager.getValidCookies(REQUEST_URL, HOST, formData);
+		Document thisDoc = webManager.getPageBehindLogin(CACHE_STATS, HOST, cookies);
+		fileManager.writePageHTML(thisDoc, CACHE_STATS);
 	}
 
 	/**
@@ -99,21 +96,22 @@ public class WebCrawler {
 		WebFilter webFilter = new WebFilter();
 
 		// Receive current Document, totalQueue, and totalVisitedList
-		Document currentDoc = webManager.getPageAsDoc(currentURL);
+		Document currentDoc = webManager.getPageAsDoc(currentURL, HOST, 443);
 		Queue<String> totalQueue = urlManager.getQueue();
 		List<String> totalVisitedList = urlManager.getVisitedList();
 		
 		// Write the currentDoc to a file
-		fileManager.writePageHTML(currentDoc);
+		fileManager.writePageHTML(currentDoc, currentURL);
 		// Add the currentURL to totalVisitedList
 		urlManager.addVisitedURL(currentURL);
 		// Remove Queue head, i.e. currentURL after first iteration
 		urlManager.removeQueueHead();
 		
+		
 		// Parse the HTML from currentDoc
-		List<String> parsedHTML = webParser.parseHTML(currentDoc);
+		List<String> parsedHTML = webParser.parseHTML(currentDoc, PARSE_TAG, PARSE_ATTRIBUTE);
 		// Get all URLs that are local
-		List<String> localURLs = webFilter.getLocalURLs(parsedHTML);
+		List<String> localURLs = webFilter.getLocalURLs(parsedHTML, currentURL);
 		// If an item is in localURLs and isn't in totalQueue, add it to totalQueue
 		Queue<String> newTotalQueue = webFilter.filterRepeats(localURLs, totalQueue);
 		// If an item is in totalVisitedList and isn't in newTotalQueue, remove it from newTotalQueue

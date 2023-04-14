@@ -28,11 +28,12 @@ public class WebParser {
 	 * @param currentDoc
 	 * @return list of links
 	 */
-	public List<String> parseHTML(Document currentDoc) {
-		Elements links = currentDoc.select("a[href]");
+	public List<String> parseHTML(Document currentDoc, String tag, String attribute) {
+		Elements links = currentDoc.select(tag);
 		List<String> linkList = new ArrayList<>();
-		for (Element link : links)
-			linkList.add(link.attr("abs:href"));
+		for (Element link : links) {
+			linkList.add(link.attr(attribute).replaceFirst("https://", "").replace("#", ""));
+		}
 		return linkList;
 	}
 }

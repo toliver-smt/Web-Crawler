@@ -25,8 +25,8 @@ public class WebFilter {
 	 * @param list
 	 * @return updated list
 	 */
-	public List<String> getLocalURLs(List<String> list) {
-		list.removeIf(s -> !s.startsWith("https"));
+	public List<String> getLocalURLs(List<String> list, String host) {
+		list.removeIf(s -> !s.startsWith(host));
 		return list;
 	}
 

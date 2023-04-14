@@ -25,18 +25,18 @@ public class FileManager {
 	 * 
 	 * @param currentDoc
 	 */
-	public void writePageHTML(Document currentDoc) {
+	public void writePageHTML(Document currentDoc, String host) {
 		// Define the title of the Document
 		String title = currentDoc.title();
 		// Create output file destination
 		File outputFile = new File("src/main/resources/res/" + title + ".txt");
-		try (
-				// Create buffered input stream
-				InputStream inputStream = new ByteArrayInputStream(currentDoc.toString().getBytes());
-				InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-				BufferedReader in = new BufferedReader(inputStreamReader);
-				// Create output stream
+		// Create input and output stream
+		try (InputStream inputStream = new ByteArrayInputStream(currentDoc.toString().getBytes());
 				FileOutputStream writer = new FileOutputStream(outputFile);) {
+			InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+			BufferedReader in = new BufferedReader(inputStreamReader);
+			
+			// Read from input stream and write to file
 			int inData;
 			while ((inData = in.read()) != -1) {
 				writer.write(inData);
