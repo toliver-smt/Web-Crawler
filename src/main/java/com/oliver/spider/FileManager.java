@@ -25,11 +25,11 @@ public class FileManager {
 	 * 
 	 * @param currentDoc
 	 */
-	public void writePageHTML(Document currentDoc, String host) {
+	public void writePageHTML(Document currentDoc, String path) {
 		// Define the title of the Document
 		String title = currentDoc.title();
 		// Create output file destination
-		File outputFile = new File("src/main/resources/res/" + title + ".txt");
+		File outputFile = new File(path + title + ".txt");
 		// Create input and output stream
 		try (InputStream inputStream = new ByteArrayInputStream(currentDoc.toString().getBytes());
 				FileOutputStream writer = new FileOutputStream(outputFile);) {
